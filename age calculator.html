@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="converter-container">
+        <h1>Age Calculator</h1>
+        <label for="birthDate">Enter Your Birth Date:</label>
+        <input type="date" id="birthDate">
+        
+        <label for="targetDate">Calculate Age As of (Target Date):</label>
+        <input type="date" id="targetDate">
+
+        <button onclick="calculateAge()">Calculate Age</button>
+        <div class="output" id="output">Your age will appear here.</div>
+        <button class="back-button" onclick="goBack()">Go to Home</button>
+    </div>
+
+    <script>
+        function calculateAge() {
+            const birthDate = new Date(document.getElementById("birthDate").value);
+            const targetDate = new Date(document.getElementById("targetDate").value);
+           
+
+            if (isNaN(birthDate.getTime()) || isNaN(targetDate.getTime())) {
+                document.getElementById("output").innerText = "Please enter valid dates.";
+                return;
+            }
+
+            if (birthDate > targetDate) {
+                document.getElementById("output").innerText = "Target date must be after the birth date.";
+                return;
+            }
+
+            let ageYears = targetDate.getFullYear() - birthDate.getFullYear();
+            let ageMonths = targetDate.getMonth() - birthDate.getMonth();
+            let ageDays = targetDate.getDate() - birthDate.getDate();
+
+            if (ageDays < 0) {
+                ageMonths -= 1;
+                ageDays += new Date(targetDate.getFullYear(), targetDate.getMonth(), 0).getDate();
+            }
+            if (ageMonths < 0) {
+                ageYears -= 1;
+                ageMonths += 12;
+            }
+
+            document.getElementById("output").innerText = `As of ${targetDate.toDateString()}, you are ${ageYears} years, ${ageMonths} months, and ${ageDays} days old.`;
+           
+       
+        }
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>

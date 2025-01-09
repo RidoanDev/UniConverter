@@ -1,0 +1,106 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 10px;
+}
+
+.calculator {
+    background: #1d1d23;
+    border-radius: 20px;
+    padding: 40px;
+    width: 380px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.calculator:hover {
+    transform: scale(1.05);
+}
+
+.display {
+    margin-bottom: 30px;
+}
+
+#result {
+    width: 100%;
+    padding: 20px;
+    font-size: 3rem;
+    text-align: right;
+    border: none;
+    border-radius: 12px;
+    background: #262626;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
+}
+
+#result:focus {
+    outline: none;
+    background: #3a3a3a;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.button, .homeb {
+    padding: 20px;
+    font-size: 2rem;
+    border-radius: 12px;
+    background: #3c3c3c;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.button:hover, .homeb {
+    background: #f79c42;
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.button:active,.homeb {
+    background: #ff6b3f;
+    transform: scale(0.98);
+}
+
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Keyframe for button click animation */
+@keyframes buttonClick {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.button.clicked {
+    animation: buttonClick 0.2s ease-out;
+}
+
+.buttons .button:last-child {
+    grid-column: span 2;
+}

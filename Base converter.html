@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Base Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="converter-container">
+        <h1>Base Converter</h1>
+        <label for="inputValue">Enter Value:</label>
+        <input type="text" id="inputValue" placeholder="Enter a number or value">
+        
+        <label for="fromBase">From Base:</label>
+        <select id="fromBase">
+            <option value="2">Binary</option>
+            <option value="8">Octal</option>
+            <option value="10">Decimal</option>
+            <option value="16">Hexadecimal</option>
+        </select>
+        
+        <label for="toBase">To Base:</label>
+        <select id="toBase">
+            <option value="2">Binary</option>
+            <option value="8">Octal</option>
+            <option value="10">Decimal</option>
+            <option value="16">Hexadecimal</option>
+            <option value="gray">Gray Code</option>
+            <option value="twos">Two's Complement</option>
+            <option value="excess3">Excess-3</option>
+            <option value="bcd">BCD Code</option>
+            <option value="ascii">ASCII Code</option>
+            <option value="unicode">Unicode</option>
+            <option value="alphaNumeric">Alpha-Numeric Code</option>
+            <option value="ebcdic">EBCDIC Code</option>
+            <option value="morse">Morse Code</option>
+            <option value="roman">Roman Numerals</option>
+            <option value="hexToRgb">Hexadecimal to RGB</option>
+            <option value="base64Encode">Base64 Encode</option>
+            <option value="base64Decode">Base64 Decode</option>
+            <option value="textToBinary">Text to Binary</option>
+            <option value="binaryToText">Binary to Text</option>
+            <option value="decimalToFraction">Decimal to Fraction</option>
+            <option value="rgbToHex">RGB to Hexadecimal</option>
+            <option value="reverseText">Reverse Text</option>
+            <option value="palindromeChecker">Palindrome Checker</option>
+        </select>
+        
+        <button onclick="convertBase()">Convert</button>
+        <div class="output" id="output">Result will appear here.</div>
+        <button class="back-button" onclick="goBack()">Go to Home</button>
+    </div>
+
+    <script>
+        function convertBase() {
+            const inputValue = document.getElementById('inputValue').value;
+            const fromBase = parseInt(document.getElementById('fromBase').value);
+            const toBase = document.getElementById('toBase').value;
+            let result;
+    
+            if (inputValue === "") {
+                alert("Please enter a value.");
+                return;
+            }
+    
+            // Convert the input value to decimal
+            let decimalValue;
+            try {
+                decimalValue = parseInt(inputValue, fromBase);
+                if (isNaN(decimalValue)) throw new Error("Invalid number");
+            } catch (error) {
+                alert("Invalid input value.");
+                return;
+            }
+    
+            // Convert decimal value to the desired base
+            switch (toBase) {
+                case "2":
+                    result = decimalValue.toString(2);
+                    break;
+                case "8":
+                    result = decimalValue.toString(8);
+                    break;
+                case "10":
+                    result = decimalValue.toString(10);
+                    break;
+                case "16":
+                    result = decimalValue.toString(16).toUpperCase();
+                    break;
+                case "gray":
+                    result = toGrayCode(decimalValue);
+                    break;
+                case "twos":
+                    result = toTwosComplement(decimalValue);
+                    break;
+                case "excess3":
+                    result = toExcess3(decimalValue);
+                    break;
+                case "bcd":
+                    result = toBCD(decimalValue);
+                    break;
+                case "ascii":
+                    result = toASCII(decimalValue);
+                    break;
+                case "unicode":
+                    result = toUnicode(decimalValue);
+                    break;
+                case "alphaNumeric":
+                    result = toAlphaNumeric(decimalValue);
+                    break;
+                case "ebcdic":
+                    result = toEBCDIC(decimalValue);
+                    break;
+                case "morse":
+                    result = toMorseCode(decimalValue);
+                    break;
+                case "roman":
+                    result = toRoman(decimalValue);
+                    break;
+                case "hexToRgb":
+                    result = hexToRgb(inputValue);
+                    break;
+                case "base64Encode":
+                    result = base64Encode(inputValue);
+                    break;
+                case "base64Decode":
+                    result = base64Decode(inputValue);
+                    break;
+                case "textToBinary":
+                    result = textToBinary(inputValue);
+                    break;
+                case "binaryToText":
+                    result = binaryToText(inputValue);
+                    break;
+                case "decimalToFraction":
+                    result = decimalToFraction(parseFloat(inputValue));
+                    break;
+                case "rgbToHex":
+                    result = rgbToHex(inputValue);
+                    break;
+                case "reverseText":
+                    result = reverseText(inputValue);
+                    break;
+                case "palindromeChecker":
+                    result = isPalindrome(inputValue) ? "Yes, it's a palindrome!" : "No, it's not a palindrome.";
+                    break;
+                default:
+                    result = "Invalid conversion.";
+                    break;
+            }
+    
+            document.getElementById('output').innerText = result;
+        }
+    
+        function toGrayCode(decimal) {
+            let binary = decimal.toString(2);
+            let gray = binary[0];
+            for (let i = 1; i < binary.length; i++) {
+                gray += binary[i] ^ binary[i - 1];
+            }
+            return gray;
+        }
+    
+        function toTwosComplement(decimal) {
+            let binary = decimal.toString(2);
+            let length = binary.length;
+            let inverted = "";
+            for (let i = 0; i < length; i++) {
+                inverted += binary[i] === '0' ? '1' : '0';
+            }
+            let carry = 1;
+            let result = "";
+            for (let i = length - 1; i >= 0; i--) {
+                let sum = parseInt(inverted[i]) + carry;
+                result = (sum % 2) + result;
+                carry = Math.floor(sum / 2);
+            }
+            return result;
+        }
+    
+        function toExcess3(decimal) {
+            let binary = decimal.toString(2);
+            let result = "";
+            for (let i = 0; i < binary.length; i++) {
+                result += (parseInt(binary[i]) + 3).toString(2).padStart(4, '0');
+            }
+            return result;
+        }
+    
+        function toBCD(decimal) {
+            return decimal.toString(2).padStart(8, '0');
+        }
+    
+        function toASCII(decimal) {
+            return String.fromCharCode(decimal);
+        }
+    
+        function toUnicode(decimal) {
+            return `U+${decimal.toString(16).toUpperCase()}`;
+        }
+    
+        function toAlphaNumeric(decimal) {
+            return decimal.toString(36).toUpperCase();
+        }
+    
+        function toEBCDIC(decimal) {
+            const ebcdicTable = {
+                0: "C5", 1: "C1", 2: "D5", 3: "D1", 4: "F1", 5: "E1", 6: "C9", 7: "F9", 
+                8: "E9", 9: "F5", 10: "F3", 11: "F7", 12: "E5", 13: "C3", 14: "C7", 15: "CF",
+                // Add more as needed
+            };
+            return ebcdicTable[decimal] || "Not in EBCDIC table";
+        }
+    
+        function toMorseCode(decimal) {
+            const morseCode = {
+                "0": "-----", "1": ".----", "2": "..---", "3": "...--", "4": "....-", "5": ".....",
+                "6": "-....", "7": "--...", "8": "---..", "9": "----."
+            };
+            let binary = decimal.toString(2);
+            return binary.split('').map(digit => morseCode[digit]).join(' ');
+        }
+    
+        function toRoman(decimal) {
+            const romanNumerals = [
+                [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"], [100, "C"], [90, "XC"], 
+                [50, "L"], [40, "XL"], [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]
+            ];
+            let result = "";
+            for (let [value, numeral] of romanNumerals) {
+                while (decimal >= value) {
+                    result += numeral;
+                    decimal -= value;
+                }
+            }
+            return result;
+        }
+    
+        function hexToRgb(hex) {
+            hex = hex.replace('#', '');
+            let r = parseInt(hex.substring(0, 2), 16);
+            let g = parseInt(hex.substring(2, 4), 16);
+            let b = parseInt(hex.substring(4, 6), 16);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+    
+        function base64Encode(input) {
+            return btoa(input);
+        }
+    
+        function base64Decode(input) {
+            return atob(input);
+        }
+
+        function goBack() {
+            window.location.href = "index.html";  // Change to your homepage URL
+        }
+
+        function textToBinary(text) {
+            return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+        }
+
+        function binaryToText(binary) {
+            return binary.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
+        }
+
+        function decimalToFraction(decimal) {
+            const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+            let denominator = 1;
+            while (decimal % 1 !== 0) {
+                decimal *= 10;
+                denominator *= 10;
+            }
+            const divisor = gcd(decimal, denominator);
+            return `${decimal / divisor}/${denominator / divisor}`;
+        }
+
+        function rgbToHex(rgb) {
+            const match = rgb.match(/\d+/g);
+            if (!match || match.length !== 3) return "Invalid RGB format.";
+            return `#${match.map(num => parseInt(num).toString(16).padStart(2, '0')).join('')}`.toUpperCase();
+        }
+
+        function reverseText(text) {
+            return text.split('').reverse().join('');
+        }
+
+        function isPalindrome(text) {
+            const cleanText = text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+            return cleanText === cleanText.split('').reverse().join('');
+        }
+    </script>
+</body>
+</html>

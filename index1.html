@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Unit Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="converter-container">
+        <h1>Universal Unit Converter</h1>
+        
+        <label for="category">Select Conversion Category:</label>
+        <select id="category" onchange="populateUnits()">
+            <option value="length"> Length (দৈর্ঘ্য)</option>
+            <option value="weight">Weight (ওজন)</option>
+            <option value="time">Time (সময়)</option>
+            <option value="temperature">Temperature (তাপমাত্রা)</option>
+            <option value="electricCurrent">ElectricCurrent (তড়িৎ প্রবাহ)</option>
+            <option value="luminousFlux">LuminousFlux (দিপন তীব্রতা)</option>
+            <option value="amountOfSubstance">Amount Of Substance (পদার্থের পরিমাণ)</option>
+            <option value="speed">Speed (গতি)</option>
+            <option value="volume">Volume (আয়তন)</option>
+            <option value="area">Area (এলাকা)</option>
+            <option value="pressure">Pressure (চাপ)</option>
+            <option value="Density">Density (ঘনত্ব)</option>
+            <option value="energy">Energy (শক্তি)</option>
+            <option value="power">Power (ক্ষমতা)</option>
+            <option value="frequency">Frequency (কম্পাঙ্ক)</option>
+            <option value="angle">Angle (কোণ)</option>
+            <option value="bit">Data Units (বিট এবং বাইট)</option>
+        </select>
+ 
+        <div id="conversionSection">
+            <label for="inputValue">Enter Value:</label>
+            <input type="number" id="inputValue" placeholder="Enter value">
+            
+            <label for="fromUnit">From Unit:</label>
+            <select id="fromUnit"></select>
+            
+            <label for="toUnit">To Unit:</label>
+            <select id="toUnit"></select>
+            
+            <button onclick="convertUnit()">Convert</button>
+            <div class="output" id="output">Result will appear here.</div>
+        </div>
+        <button class="back-button" onclick="goBack()">Go to Home</button>
+    </div>
+
+
+    <script>
+        const unitData = {
+  length: {
+      units: {
+      // International Units
+      "এক্সামিটার Exameter": 1e18,               
+      "পেটামিটার Petameter": 1e15,               
+      "টেরামিটার Terameter": 1e12,               
+      "গিগামিটার Gigameter": 1e9,            
+      "মেগামিটার Megameter": 1e6,             
+      "কিলোমিটার Kilometer (km)": 1000,       
+      "হেক্টোমিটার Hectometer": 100,            
+      "ডেকামিটার Decameter": 10,               
+      "মিটার Meter (m)": 1,                
+      "ডেসিমিটার Decimeter": 0.1,            
+      "সেন্টিমিটার Centimeter (cm)": 0.01,       
+      "মিলিমিটার Millimeter (mm)": 0.001,        
+      "মাইক্রোমিটার Micrometer (μm)": 1e-6,      
+      "ন্যানোমিটার Nanometer (nm)": 1e-9,        
+      "পিকোমিটার Picometer (pm)": 1e-12,       
+      "ফেমটোমিটার Femtometer (fm)": 1e-15,      
+      "অ্যাটোমিটার Attometer (am)": 1e-18,       
+      "মাইল Mile (mi)": 1609.34,                 
+      "ইঞ্চি Inch (in)": 0.0254,                 
+      "ফুট Foot (ft)": 0.3048,                 
+      "ইয়ার্ড Yard (yd)": 0.9144,                
+      "নটিক্যাল মাইল Nautical mile": 1852,      
+      "অ্যাংস্ট্রাম Angstrom (Å)": 1e-10,        
+      
+      // Regional Units in Bangladesh
+      "হাত Haat": 0.457,                          
+      "গজ Gaz": 0.914,                            
+      "বিন্দু Bindu": 0.0002,                      
+      
+      // International Traditional Units
+      "রড Rod": 5.0292,                          
+      "চেইন Chain": 20.1168,                      
+      "লিঙ্ক Link": 0.201168,                      
+      "কিউবিট Cubit": 0.4572,                    
+      "ভারতীয় মাইল Mile (Indian)": 1609.344,     
+      "ফারলং Furlong": 201.168,                  
+      "পোল Pole": 5.5,                            
+      },
+      
+              convert: (value, from, to) => (value * from) / to
+          },
+
+
+          weight: {
+              units: {
+                // International Units
+                "কিলোগ্রাম Kilogram (Kg)": 1000,
+                "গ্রাম Gram (gm)": 1,
+                "মিলিগ্রাম Milligram (mg)": 0.001,
+                "মেট্রিক টন Metric Ton (T)": 1e6,
+                "পাউন্ড Pound (lb)": 453.592,
+                "আউন্স Ounce (oz)": 28.3495,
+                "ক্যারট Carat": 0.2,
+                "সের Ser": 933.10,
+                "তোলা Tola": 11.664,
+                "ভরি Vori": 11.6666,
+                "কুইন্টাল Quintal": 100,
+                "স্টোন Stone": 6350.29,
+                "গ্রেইন Grain": 0.06479891,
+                "পিকুল Picul": 60.480,
+                "দ্রাম Dram": 1.7718,
+                "চীনা জিন Chinese Jin": 500,
+                "হংকং ক্যাটি HongKong Catty": 604.79,
+                "তঞ্জোরে তোলা Tanjore Tola": 11.6666,
+                "বাংলাদেশ টন Bangladesh Ton": 1000
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+
+            
+            time: {
+              units: {
+                "মিলিসেকেন্ড Millisecond": 0.001,
+                "মাইক্রোসেকেন্ড Microsecond": 1e-6,
+                "নানোসেকেন্ড Nanosecond": 1e-9,
+                "সেকেন্ড Second": 1,
+                "পালক Palak": 24,
+                "প্রহর Prahar": 10800,
+                "মিনিট Minute": 60,
+                "ঘণ্টা Hour": 3600,
+                "দিন Day": 86400,
+                "সপ্তাহ Week": 604800,
+                "মাস Month": 2592000,
+                "বছর Year": 31536000,
+                "লিপইয়ার LeapYear": 31622400,
+                "দশক Decade": 315360000,
+                "শতাব্দী Century": 3153600000,
+                "সহস্রাব্দ Millennium": 31536000000,
+                "ফোর্টনাইট Fortnight": 1209600,
+                "কোয়ার্টার Quarter": 7884000,
+                "সৌর বছর SolarYear": 365.25 * 86400,
+                "সিডেরিয়াল বছর SiderealYear": 365.25636 * 86400,
+                "জুলিয়ান বছর JulianYear": 31557600,
+                "এক বিলিয়ন বছর BillionYears": 31536000000000
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            temperature: {
+              units: {
+                "সেলসিয়াস Celsius (°C)": "C",
+                "ফারেনহাইট Fahrenheit (°F)": "F",
+                "কেলভিন Kelvin (K)": "K",
+                "র্যাঙ্কিন Rankine (°R)": "°R",
+                "রেওমুর Reaumur (°Re)": "°Re",
+                "ডেলিসলে Delisle (°De)": "°De",
+                "নিউটন Newton (°N)": "°N",
+                "রোমার Rømer (°Ro)": "°Ro",
+                "লুথার Luther (°Lu)": "°Lu",
+                "প্লাঙ্ক Planck (°Pl)": "°Pl",
+                "সেন্টিগ্রেড Centigrade (°C)": "C"
+              },
+              convert: (value, from, to) => {
+                if (from === "C" && to === "F") return (value * 9/5) + 32;
+                if (from === "F" && to === "C") return (value - 32) * 5/9;
+                if (from === "C" && to === "K") return value + 273.15;
+                if (from === "K" && to === "C") return value - 273.15;
+                if (from === "F" && to === "K") return (value - 32) * 5/9 + 273.15;
+                if (from === "K" && to === "F") return (value - 273.15) * 9/5 + 32;
+                if (from === "C" && to === "°Ro") return value * 21/40 + 7.5;
+                if (from === "°Ro" && to === "C") return (value - 7.5) * 40/21;
+                if (from === "C" && to === "°Re") return value * 4/5;
+                if (from === "°Re" && to === "C") return value * 5/4;
+                if (from === "C" && to === "°De") return (100 - value) * 3/2;
+                if (from === "°De" && to === "C") return 100 - value * 2/3;
+                if (from === "C" && to === "°N") return value * 33/100;
+                if (from === "°N" && to === "C") return value * 100/33;
+                if (from === "C" && to === "°Pl") return value * 1.416784e-8;
+                if (from === "°Pl" && to === "C") return value / 1.416784e-8;
+                if (from === "C" && to === "°Lu") return value * 3.733333;
+                if (from === "°Lu" && to === "C") return value / 3.733333;
+                return value;
+              }
+            },
+
+            
+            electricCurrent: {
+              units: {
+                "অ্যাম্পিয়ার (A)": 1,
+                "মিলি অ্যাম্পিয়ার (mA)": 0.001,
+                "মাইক্রো অ্যাম্পিয়ার (μA)": 1e-6,
+                "কিলো অ্যাম্পিয়ার (kA)": 1000,
+                "মেগা অ্যাম্পিয়ার (MA)": 1e6,
+                "স্ট্যাটঅ্যাম্পিয়ার (statA)": 3.33564e-10,
+                "বায়ট (Bi)": 3.33564e-1,
+                "অ্যাম্পের ব্যালান্স কারেন্ট (ABC)": 1
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            luminousFlux: {
+              units: {
+                "লুমেন (lm)": 1,
+                "লাক্স (lx)": 1,
+                "ক্যান্ডেলা (cd)": 1,
+                "নিট (nt)": 1,
+                "ফুটক্যান্ডেল (fc)": 10.764,
+                "আলোকীয় তীব্রতা (cd)": 1,
+                "ল্যাম্বার্ট (L)": 318.3099,
+                "স্টেরেডিয়ান (sr)": 1
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+
+            
+            amountOfSubstance: {
+              units: {
+                "মোল (mol)": 1,
+                "কিলোমোল (kmol)": 1e3,
+                "মাইক্রোমোল (µmol)": 1e-6,
+                "ন্যানোমোল (nmol)": 1e-9,
+                "পিকোমোল (pmol)": 1e-12,
+                "ফেমটোমোল (fmol)": 1e-15,
+                "অ্যাটোমোল (amol)": 1e-18,
+                "গ্রাম-মোল (g-mol)": 1
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            speed: {
+              units: {
+                "মিটার প্রতি সেকেন্ড m/s": 1,
+                "মিটার প্রতি ঘণ্টা m/h": 1609.34,
+                "কিলোমিটার প্রতি সেকেন্ড km/s": 1000,
+                "কিলোমিটার প্রতি ঘণ্টা km/h": 0.27778,
+                "মাইল প্রতি সেকেন্ড mile/s": 1609.34,
+                "মাইল প্রতি ঘণ্টা mile/h": 1.60934,
+                "ফুট প্রতি সেকেন্ড ft/s": 0.3048,
+                "ফুট প্রতি ঘণ্টা ft/h": 0.3048 / 3600,
+                "নট knots": 0.514444,
+                "মাচ Mach": 343,
+                "আলোকবর্ষ প্রতি বছর light_years/year": 9.461e12,
+                "নট (UK) knot (UK)": 0.514444,
+                "আলোর গতি speed_of_light": 299792458
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+
+            
+            volume:{
+              units: {
+                "ঘনমিটার m³": 1,
+                "সেন্টিমিটার কিউব cm³": 1e-6,
+                "সিসি cc": 1e-6,
+                "মিলিমিটার কিউব mm³": 1e-9,
+                "ডেসিমিটার কিউব dm³": 0.001,
+                "লিটার liter": 0.001,
+                "মিলিলিটার ml": 1e-6,
+                "গ্যালন gallon": 0.00378541,
+                "ব্যারেল barrel": 0.158987,
+                "কাপ cup": 0.00454609,
+                "টেবিলচামচ tablespoon": 0.0000148,
+                "চা চামচ teaspoon": 0.00000493,
+                "ফ্লুইড আউন্স (US) fluid ounce (fl oz)": 2.95735e-5,
+                "ইউএস গ্যালন US gallon (gal)": 0.00378541,
+                "ইম্পেরিয়াল গ্যালন (UK gal) Imperial gallon (UK gal)": 0.00454609,
+                "কোয়ার্ট (US) quart (qt)": 0.000946353,
+                "পিন্ট (US) pint (pt)": 0.000473176,
+                "কাপ (US) cup (US)": 0.000236588,
+                "ফ্লুইড ড্রাম fluid dram (fl dr)": 3.6967e-6,
+                "মিলিমিটার মিলিমিটার (mm)": 1e-6,
+                "বুশেল (US) bushel (US)": 0.0352391,
+                "ব্যারেল (UK) barrel (UK)": 0.163659,
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            area:{
+              units: {
+                "বর্গমিটার m²": 1,
+                "বর্গকিলোমিটার km²": 1e6,
+                "বর্গসেন্টিমিটার cm²": 1e-4,
+                "হেক্টর hectare": 1e4,
+                "একর acre": 4046.86,
+                "বর্গমাইল mile²": 2.58999e6,
+                "বর্গগজ y²": 0.836127,
+                "বর্গফুট ft²": 0.092903,
+                "বর্গইঞ্চি in²": 0.00064516,
+                "বর্গমিলিমিটার mm²": 1e-6,
+                "বর্গরড rod²": 25.2929,
+                "বর্গচেইন chain²": 404.686,
+                "বার্ন barn": 1e-28,
+                "বিঘা bigha": 1337.8,
+                "কাঠা katha": 66.89,
+                "ডেসিমেল decimal": 40.4686,
+                "শতাংশ shotangsho": 40.4686,
+                "গন্ডা gonda": 1.65,
+                "পরা pora": 25.2929,
+                "কাঠা kantha": 334.45,
+                "কানি kani": 17280,
+                "গন্ডা প্রতি কানি gonda_per_kani": 20,
+                "সাই কানি sai_kani": 120,
+                "কাচ্চা কানি kachcha_kani": 40,
+                "বিঘা bigha": 1337.8,
+                "ছটাক shotak": 45,
+                "একর acre": 4046.86,
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            pressure:{
+              units: {
+                "প্যাসকেল Pascal (Pa)": 1,
+                "নিউটন প্রতি বর্গমিটার N/m²": 1,
+                "কিলোপ্যাসকেল Kilopascal (kPa)": 1000,
+                "মিমি পারদ mmHg": 133.322,
+                "সেমি পারদ cmHg": 1333.22,
+                "অ্যাটমস্ফিয়ার atm": 101325,
+                "বার bar": 100000,
+                "টর torr": 133.322,
+                "পাউন্ড প্রতি বর্গইঞ্চি psi": 6894.76,
+                "ইঞ্চি পারদ inchHg": 3386.39,
+                "মিমি জল mmH2O": 9.80665,
+                "সেমি জল cmH2O": 98.0665,
+                "অ্যাটমোস্ফিয়ারিক চাপ atm": 101325,
+                "কিলোগ্রাম ফোর্স প্রতি সেমি বর্গ kgf/cm²": 98066.5,
+                "ডাইন প্রতি সেমি বর্গ dyne/cm²": 0.1,
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            density:{
+              units: {
+                "কিলোগ্রাম প্রতি ঘনমিটার Kg/m³": 1,
+                "গ্রাম প্রতি সেন্টিমিটার কিউব g/cm³": 1000,
+                "গ্রাম প্রতি কিউব সেন্টিমিটার g/cc": 1000,
+                "গ্রাম প্রতি মিলিলিটার g/ml": 1000,
+                "গ্রাম প্রতি ঘনমিটার g/m³": 0.001,
+                "মিলিগ্রাম প্রতি লিটার mg/L": 0.001,
+                "গ্রাম প্রতি লিটার g/L": 1,
+                "কিলোগ্রাম প্রতি লিটার Kg/L": 1000,
+                "পাউন্ড প্রতি ঘনফুট lb/ft³": 16.0185,
+                "আউন্স প্রতি ইঞ্চি কিউব oz/in³": 0.57804,
+                "পাউন্ড প্রতি ইঞ্চি কিউব lb/in³": 0.0361273,
+                "টন প্রতি ঘনফুট ton/ft³": 0.00057804,
+                "টন প্রতি ঘনমিটার ton/m³": 0.000907184,
+                "স্লাগ প্রতি ঘনফুট slug/ft³": 0.0160185,
+                "কিলোগ্রাম প্রতি সেন্টিমিটার কিউব kg/cm³": 1000,
+                "গ্রাম প্রতি মিলিলিটার g/mL": 1,
+                "কিলোগ্রাম প্রতি ডেসিমিটার কিউব kg/dm³": 1,
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            energy:{
+              units: {
+                "জুল (Joule)": 1,
+                "কিলোজুল (Kilojoule)": 1000,
+                "অ্যাটমিক মাস ইউনিট (AMU)": 1.493e+10,
+                "এর্গ (erg)": 1e7,
+                "ক্যালরি (Calorie)": 4.184,
+                "কিলোক্যালরি (Kilocalorie)": 4184,
+                "ওয়াট-ঘণ্টা (Watt-hour)": 3600,
+                "কিলোওয়াট-ঘণ্টা (Kilowatt-hour)": 3600000,
+                "ইলেকট্রনভোল্ট (Electronvolt)": 1.60218e-19,
+                "মেগাএলেকট্রনভোল্ট (Megaelectronvolt)": 1.60218e-13,
+                "বিটিইউ (BTU)": 1055.06,
+                "থার্ম (Therm)": 1.055e+5,
+                "ফুট-পাউন্ড (Foot-pound)": 1.35582,
+                "কিলোক্যালরি (kcal)": 4184,
+                "হর্সপাওয়ার-ঘণ্টা (Horsepower-hour)": 2684519.55,
+                "টন TNT (TNT)": 4184000000,
+                "কিলোজুল (Kilojoule)": 1000,
+                "ওয়াট (W)": 1,
+                "কিলোওয়াট ঘণ্টা (KWh)": 3600000,
+                "জেটাজুল (Zettajoule)": 1e21,
+                "গিগাজুল (GigaJoule)": 1e9,
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            power:{
+              units: {
+                "ওয়াট (Watt)": 1,
+                "জুল প্রতি সেকেন্ড (J/s)": 1,
+                "হর্সপাওয়ার (horsepower)": 745.7,
+                "কিলোওয়াট (Kilowatt)": 1000,
+                "মেগাওয়াট (Megawatt)": 1000000,
+                "গিগাওয়াট (Gigawatt)": 1e9,
+                "টেরাওয়াট (Terawatt)": 1e12,
+                "মিলিওয়াট (Milliwatt)": 1e-3,
+                "মাইক্রোওয়াট (Microwatt)": 1e-6,
+                "কিলোজুল প্রতি ঘণ্টা (Kilojoule per hour)": 0.277777,
+                "বিটিইউ প্রতি ঘণ্টা (BTU/h)": 0.293071,
+                "হর্সপাওয়ার ঘণ্টা (horsepower-hour)": 2684519.55,
+                "ক্যালরি প্রতি সেকেন্ড (Calorie per second)": 4.184,
+                "এর্গ প্রতি সেকেন্ড (Erg per second)": 1e-7,
+                "ওয়াট-ঘণ্টা (Watt-hour)": 3600,
+                "কিলোওয়াট-ঘণ্টা (Kilowatt-hour)": 3600000,
+                "মেগাওয়াট-ঘণ্টা (Megawatt-hour)": 3.6e9,
+                "গিগাওয়াট-ঘণ্টা (Gigawatt-hour)": 3.6e12,
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+           angle:{
+              units: {
+                "ডিগ্রি (Degree)": 1,
+                "রেডিয়ান (Radian)": 57.2958,
+                "গ্রেডিয়ান (Gradian)": 0.9,
+                "মিনিট (Minute)": 1 / 60,
+                "সেকেন্ড (Second)": 1 / 3600,
+                "পূর্ণবৃত্ত (Circle)": 360,
+                "সোজা কোণ (Right angle)": 90,
+                "কোয়ার্টার (Quadrant)": 90,
+                "টার্ন (Turn)": 360,
+                "অর্ধেক টার্ন (Half turn)": 180,
+                "পাই (Pi)": 3.14159,
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+
+            
+            frequency:{
+              units: {
+                "হার্জ (Hertz)": 1,
+                "কিলোহার্জ (KiloHertz)": 1000,
+                "মেগাহার্জ (MegaHertz)": 1e6,
+                "গিগাহার্জ (GigaHertz)": 1e9,
+                "টেরাহার্জ (TeraHertz)": 1e12,
+                "পেটাহার্জ (PetaHertz)": 1e15,
+                "এক্সাহার্জ (ExaHertz)": 1e18,
+                "জেটাহার্জ (ZettaHertz)": 1e21,
+                "ইয়টাহার্জ (YottaHertz)": 1e24,
+                "সাইকেল প্রতি সেকেন্ড (Cycles per second)": 1,
+                "রেডিয়ান প্রতি সেকেন্ড (Radian per second)": 1,
+                "প্রতি মিনিটে ঘূর্ণন (RPM)": 1 / 60,
+                "কোণীয় ফ্রিকোয়েন্সি (Angular frequency)": 1,
+              },
+              convert: (value, from, to) => (value * from) / to
+            },
+            
+            bit:{
+              units: {
+                "বিট (Bit)": 1,
+                "বাইট (Byte)": 8,
+                "কিলোবাইট (KB)": 1024,
+                "মেগাবাইট (MB)": 1024 * 1024,
+                "গিগাবাইট (GB)": 1024 * 1024 * 1024,
+                "টেরাবাইট (TB)": 1024 * 1024 * 1024 * 1024,
+                "পেটাবাইট (PB)": 1024 * 1024 * 1024 * 1024 * 1024,
+                "এক্সাবাইট (EB)": 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
+                "জেটাবাইট (ZB)": 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
+                "ইয়টাবাইট (YB)": 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024,
+                "কিলোবিট (Kb)": 1000,
+                "মেগাবিট (Mb)": 1000 * 1000,
+                "গিগাবিট (Gb)": 1000 * 1000 * 1000,
+                "টেরাবিট (Tb)": 1000 * 1000 * 1000 * 1000,
+                "পেটাবিট (Pb)": 1000 * 1000 * 1000 * 1000 * 1000,
+                "এক্সাবিট (Eb)": 1000 * 1000 * 1000 * 1000 * 1000 * 1000,
+              },
+              convert: (value, from, to) => (value * from) / to
+            }
+            
+};
+
+let currentCategory = "length";
+
+function populateUnits() {
+const category = document.getElementById("category").value;
+currentCategory = category;
+const units = unitData[category].units;
+
+// Populate from unit select
+const fromUnitSelect = document.getElementById("fromUnit");
+const toUnitSelect = document.getElementById("toUnit");
+
+fromUnitSelect.innerHTML = "";
+toUnitSelect.innerHTML = "";
+
+if (category === "base") {
+unitData[category].units.forEach(unit => {
+  const option = document.createElement("option");
+  option.value = unit;
+  option.textContent = unit.charAt(0).toUpperCase() + unit.slice(1);
+  fromUnitSelect.appendChild(option);
+  toUnitSelect.appendChild(option.cloneNode(true));
+});
+} else {
+for (const unit in units) {
+  const option = document.createElement("option");
+  option.value = unit;
+  option.textContent = unit.charAt(0) + unit.slice(1);
+  fromUnitSelect.appendChild(option);
+
+  const option2 = document.createElement("option");
+  option2.value = unit;
+  option2.textContent = unit.charAt(0) + unit.slice(1);
+  toUnitSelect.appendChild(option2);
+}
+}
+
+// If category is bit or base, handle those cases separately
+if (category === "bit" || category === "base") {
+document.getElementById("inputValue").type = "text";
+} else {
+document.getElementById("inputValue").type = "number";
+}
+}
+
+function validateInput(value, category) {
+if (!value || isNaN(value) || value < 0) return "Invalid input";
+if (category === "base" && !/^[0-9A-Fa-f]+$/.test(value)) return "Invalid base value (only hex characters are allowed)";
+return null;
+}
+
+function convertUnit() {
+const value = document.getElementById("inputValue").value.trim();
+const fromUnit = document.getElementById("fromUnit").value;
+const toUnit = document.getElementById("toUnit").value;
+
+const error = validateInput(value, currentCategory);
+if (error) {
+document.getElementById("output").innerText = error;
+return;
+}
+
+const unit = unitData[currentCategory];
+let result = "";
+
+if (currentCategory === "base") {
+// Base Conversion Logic
+result = unit.convert(value, fromUnit, toUnit);
+} else {
+result = unit.convert(parseFloat(value), unit.units[fromUnit], unit.units[toUnit]);
+}
+
+document.getElementById("output").innerText = `Result: ${result}`;
+}
+
+
+      function goBack() {
+          window.location.href = "index.html";
+      }
+
+
+populateUnits(); // Initially populate units when the page loads
+    </script>
+
+</body>
+</html>

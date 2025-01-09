@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Currency Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="converter-container">
+        <h1>Currency Converter <sup>online</sup></h1>
+        <label for="amount">Enter Amount:</label>
+        <input type="number" id="amount" placeholder="Enter amount">
+        
+        <label for="fromCurrency">From Currency:</label>
+        <select id="fromCurrency"></select>
+        
+        <label for="toCurrency">To Currency:</label>
+        <select id="toCurrency"></select>
+        
+        <button onclick="convertCurrency()">Convert</button>
+        <div class="output" id="output">Result will appear here.</div>
+        <button class="back-button" onclick="goBack()">Go to Home</button>
+    </div>
+
+    <script>
+        const apiKey = "6512a8b493bef1dc5479866326a1f62d"; // আপনার API Key এখানে বসান
+        const apiURL = `https://open.er-api.com/v6/latest/USD`; // API URL
+
+        let exchangeRates = {};
+
+        const currencyNames = {
+    "AED": "United Arab Emirates Dirham (AED)",
+    "AFN": "Afghan Afghani (AFN)",
+    "ALL": "Albanian Lek (ALL)",
+    "AMD": "Armenian Dram (AMD)",
+    "ANG": "Netherlands Antillean Guilder (ANG)",
+    "AOA": "Angolan Kwanza (AOA)",
+    "ARS": "Argentine Peso (ARS)",
+    "AUD": "Australian Dollar (AUD)",
+    "AWG": "Aruban Florin (AWG)",
+    "AZN": "Azerbaijani Manat (AZN)",
+    "BAM": "Bosnia-Herzegovina Convertible Mark (BAM)",
+    "BBD": "Barbadian Dollar (BBD)",
+    "BDT": "Bangladeshi Taka (BDT)",
+    "BGN": "Bulgarian Lev (BGN)",
+    "BHD": "Bahraini Dinar (BHD)",
+    "BIF": "Burundian Franc (BIF)",
+    "BMD": "Bermudan Dollar (BMD)",
+    "BND": "Brunei Dollar (BND)",
+    "BOB": "Bolivian Boliviano (BOB)",
+    "BRL": "Brazilian Real (BRL)",
+    "BSD": "Bahamian Dollar (BSD)",
+    "BTC": "Bitcoin (BTC)",
+    "BTN": "Bhutanese Ngultrum (BTN)",
+    "BWP": "Botswanan Pula (BWP)",
+    "BYN": "Belarusian Ruble (BYN)",
+    "BYR": "Belarusian Ruble (pre-2016) (BYR)",
+    "BZD": "Belize Dollar (BZD)",
+    "CAD": "Canadian Dollar (CAD)",
+    "CDF": "Congolese Franc (CDF)",
+    "CHF": "Swiss Franc (CHF)",
+    "CLF": "Chilean Unit of Account (UF) (CLF)",
+    "CLP": "Chilean Peso (CLP)",
+    "CNH": "Chinese Yuan (Offshore) (CNH)",
+    "CNY": "Chinese Yuan (CNY)",
+    "COP": "Colombian Peso (COP)",
+    "CRC": "Costa Rican Colón (CRC)",
+    "CUC": "Cuban Convertible Peso (CUC)",
+    "CUP": "Cuban Peso (CUP)",
+    "CVE": "Cape Verdean Escudo (CVE)",
+    "CZK": "Czech Republic Koruna (CZK)",
+    "DJF": "Djiboutian Franc (DJF)",
+    "DKK": "Danish Krone (DKK)",
+    "DOP": "Dominican Peso (DOP)",
+    "DZD": "Algerian Dinar (DZD)",
+    "EEK": "Estonian Kroon (EEK)",
+    "EGP": "Egyptian Pound (EGP)",
+    "ERN": "Eritrean Nakfa (ERN)",
+    "ETB": "Ethiopian Birr (ETB)",
+    "EUR": "Euro (EUR)",
+    "FJD": "Fijian Dollar (FJD)",
+    "FKP": "Falkland Islands Pound (FKP)",
+    "GBP": "British Pound Sterling (GBP)",
+    "GEL": "Georgian Lari (GEL)",
+    "GGP": "Guernsey Pound (GGP)",
+    "GHS": "Ghanaian Cedi (GHS)",
+    "GIP": "Gibraltar Pound (GIP)",
+    "GMD": "Gambian Dalasi (GMD)",
+    "GNF": "Guinean Franc (GNF)",
+    "GTQ": "Guatemalan Quetzal (GTQ)",
+    "GYD": "Guyanaese Dollar (GYD)",
+    "HKD": "Hong Kong Dollar (HKD)",
+    "HNL": "Honduran Lempira (HNL)",
+    "HRK": "Croatian Kuna (HRK)",
+    "HTG": "Haitian Gourde (HTG)",
+    "HUF": "Hungarian Forint (HUF)",
+    "IDR": "Indonesian Rupiah (IDR)",
+    "ILS": "Israeli New Shekel (ILS)",
+    "IMP": "Isle of Man Pound (IMP)",
+    "INR": "Indian Rupee (INR)",
+    "IQD": "Iraqi Dinar (IQD)",
+    "IRR": "Iranian Rial (IRR)",
+    "ISK": "Icelandic Króna (ISK)",
+    "JEP": "Jersey Pound (JEP)",
+    "JMD": "Jamaican Dollar (JMD)",
+    "JOD": "Jordanian Dinar (JOD)",
+    "JPY": "Japanese Yen (JPY)",
+    "KES": "Kenyan Shilling (KES)",
+    "KGS": "Kyrgyzstani Som (KGS)",
+    "KHR": "Cambodian Riel (KHR)",
+    "KMF": "Comorian Franc (KMF)",
+    "KRW": "South Korean Won (KRW)",
+    "KWD": "Kuwaiti Dinar (KWD)",
+    "KYD": "Cayman Islands Dollar (KYD)",
+    "KZT": "Kazakhstani Tenge (KZT)",
+    "LAK": "Laotian Kip (LAK)",
+    "LBP": "Lebanese Pound (LBP)",
+    "LKR": "Sri Lankan Rupee (LKR)",
+    "LRD": "Liberian Dollar (LRD)",
+    "LSL": "Lesotho Loti (LSL)",
+    "MAD": "Moroccan Dirham (MAD)",
+    "MDL": "Moldovan Leu (MDL)",
+    "MGA": "Malagasy Ariary (MGA)",
+    "MKD": "Macedonian Denar (MKD)",
+    "MMK": "Myanmar Kyat (MMK)",
+    "MNT": "Mongolian Tugrik (MNT)",
+    "MOP": "Macanese Pataca (MOP)",
+    "MRU": "Mauritanian Ouguiya (MRU)",
+    "MUR": "Mauritian Rupee (MUR)",
+    "MWK": "Malawian Kwacha (MWK)",
+    "MXN": "Mexican Peso (MXN)",
+    "MYR": "Malaysian Ringgit (MYR)",
+    "MZN": "Mozambican Metical (MZN)",
+    "NAD": "Namibian Dollar (NAD)",
+    "NGN": "Nigerian Naira (NGN)",
+    "NIO": "Nicaraguan Córdoba (NIO)",
+    "NOK": "Norwegian Krone (NOK)",
+    "NPR": "Nepalese Rupee (NPR)",
+    "NZD": "New Zealand Dollar (NZD)",
+    "OMR": "Omani Rial (OMR)",
+    "PAB": "Panamanian Balboa (PAB)",
+    "PEN": "Peruvian Nuevo Sol (PEN)",
+    "PGK": "Papua New Guinean Kina (PGK)",
+    "PHP": "Philippine Peso (PHP)",
+    "PKR": "Pakistani Rupee (PKR)",
+    "PLN": "Polish Złoty (PLN)",
+    "PYG": "Paraguayan Guarani (PYG)",
+    "QAR": "Qatari Rial (QAR)",
+    "RON": "Romanian Leu (RON)",
+    "RSD": "Serbian Dinar (RSD)",
+    "RUB": "Russian Ruble (RUB)",
+    "RWF": "Rwandan Franc (RWF)",
+    "SAR": "Saudi Riyal (SAR)",
+    "SBD": "Solomon Islands Dollar (SBD)",
+    "SCR": "Seychellois Rupee (SCR)",
+    "SDG": "Sudanese Pound (SDG)",
+    "SEK": "Swedish Krona (SEK)",
+    "SGD": "Singapore Dollar (SGD)",
+    "SHP": "Saint Helena Pound (SHP)",
+    "SLL": "Sierra Leonean Leone (SLL)",
+    "SOS": "Somali Shilling (SOS)",
+    "SRD": "Surinamese Dollar (SRD)",
+    "SSP": "South Sudanese Pound (SSP)",
+    "STD": "São Tomé and Príncipe Dobra (STD)",
+    "SYP": "Syrian Pound (SYP)",
+    "SZL": "Swazi Lilangeni (SZL)",
+    "THB": "Thai Baht (THB)",
+    "TJS": "Tajikistani Somoni (TJS)",
+    "TMT": "Turkmenistani Manat (TMT)",
+    "TND": "Tunisian Dinar (TND)",
+    "TOP": "Tongan Paʻanga (TOP)",
+    "TRY": "Turkish Lira (TRY)",
+    "TTD": "Trinidad and Tobago Dollar (TTD)",
+    "TWD": "New Taiwan Dollar (TWD)",
+    "TZS": "Tanzanian Shilling (TZS)",
+    "UAH": "Ukrainian Hryvnia (UAH)",
+    "UGX": "Ugandan Shilling (UGX)",
+    "USD": "United States Dollar (USD)",
+    "UYU": "Uruguayan Peso (UYU)",
+    "UZS": "Uzbekistani Som (UZS)",
+    "VEF": "Venezuelan Bolívar (VEF)",
+    "VND": "Vietnamese Đồng (VND)",
+    "VUV": "Vanuatu Vatu (VUV)",
+    "WST": "Samoan Tala (WST)",
+    "XAF": "CFA Franc BEAC (XAF)",
+    "XAG": "Silver Ounce (XAG)",
+    "XAU": "Gold Ounce (XAU)",
+    "XCD": "East Caribbean Dollar (XCD)",
+    "XDR": "Special Drawing Rights (IMF) (XDR)",
+    "XOF": "CFA Franc West Africa (XOF)",
+    "XPF": "CFP Franc (XPF)",
+    "YER": "Yemeni Rial (YER)",
+    "ZAR": "South African Rand (ZAR)",
+    "ZMW": "Zambian Kwacha (ZMW)",
+    "ZWL": "Zimbabwean Dollar (ZWL)",
+};
+
+
+
+
+        // Fetch currency rates and populate dropdowns
+        async function fetchRates() {
+            try {
+                const response = await fetch(apiURL);
+                const data = await response.json();
+                
+                if (data.result === "success") {
+                    exchangeRates = data.rates;
+                    populateCurrencies(Object.keys(exchangeRates));
+                } else {
+                    displayError("Failed to fetch exchange rates.");
+                }
+            } catch (error) {
+                displayError("Error fetching data. Please check your network and try again.");
+            }
+        }
+
+        // Populate currency dropdowns
+        function populateCurrencies(currencyList) {
+            const fromCurrency = document.getElementById("fromCurrency");
+            const toCurrency = document.getElementById("toCurrency");
+
+            currencyList.forEach(currency => {
+                const option1 = document.createElement("option");
+                const option2 = document.createElement("option");
+                
+                // Set value to the currency code, and display the full name
+                option1.value = currency;
+                option2.value = currency;
+                option1.textContent = currencyNames[currency] || currency;  // Full name or code if name is not available
+                option2.textContent = currencyNames[currency] || currency;  // Full name or code if name is not available
+
+                fromCurrency.appendChild(option1);
+                toCurrency.appendChild(option2);
+            });
+
+            fromCurrency.value = "USD"; // Default to USD
+            toCurrency.value = "BDT"; // Default to BDT (Bangladeshi Taka)
+        }
+
+        // Display error message
+        function displayError(message) {
+            document.getElementById("output").innerText = message;
+        }
+
+        // Perform currency conversion
+        function convertCurrency() {
+            const amount = parseFloat(document.getElementById("amount").value);
+            const fromCurrency = document.getElementById("fromCurrency").value;
+            const toCurrency = document.getElementById("toCurrency").value;
+
+            if (isNaN(amount) || amount <= 0) {
+                displayError("Please enter a valid amount.");
+                return;
+            }
+
+            if (!exchangeRates[fromCurrency] || !exchangeRates[toCurrency]) {
+                displayError("Currency data is not available.");
+                return;
+            }
+
+            const fromRate = exchangeRates[fromCurrency];
+            const toRate = exchangeRates[toCurrency];
+            const convertedAmount = (amount / fromRate) * toRate;
+
+            document.getElementById("output").innerText = `Converted Amount: ${convertedAmount.toFixed(2)} ${currencyNames[toCurrency] || toCurrency}`;
+        }
+
+        // Go back to home
+        function goBack() {
+            window.location.href = "index.html";
+        }
+
+        // Initialize the app
+        fetchRates();
+    </script>
+</body>
+</html>

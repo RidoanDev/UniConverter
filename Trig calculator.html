@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Trigonometric Functions Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="converter-container">
+        <h1>Trigonometric Functions Calculator</h1>
+        
+        <label for="angle">Please enter the correct value:</label>
+        <input type="number" id="angle" placeholder="For example: 30 for degree(°), or 0.50 for value" oninput="checkUnit()" />        
+
+
+        <label for="function">Choose Function:</label>
+        <select id="function" onchange="functionChanged()">
+            <option value="sin">Sine (sin)</option>
+            <option value="cos">Cosine (cos)</option>
+            <option value="tan">Tangent (tan)</option>
+            <option value="sec">Secant (sec)</option>
+            <option value="csc">Cosecant (cosec)</option>
+            <option value="cot">Cotangent (cot)</option>
+            <option value="asin">Inverse Sine (asin)</option>
+            <option value="acos">Inverse Cosine (acos)</option>
+            <option value="atan">Inverse Tangent (atan)</option>
+            <option value="asec">Inverse Secant (asec)</option>
+            <option value="acsc">Inverse Cosecant (acosec)</option>
+            <option value="acot">Inverse Cotangent (acot)</option>
+        </select>
+        
+        <button onclick="calculateTrig()">Calculate</button>
+        <div class="output" id="output">Result will appear here.</div>
+        
+        <div class="result-detail" id="result-detail"></div>
+        
+        <button class="back-button" onclick="goBack()">Go to Home</button>
+    </div>
+
+    <script>
+        let angleUnit = 'deg';  // Default unit is degrees
+
+        function checkUnit() {
+            const angle = parseFloat(document.getElementById("angle").value);
+            if (!isNaN(angle)) {
+                if (angle > 10) {
+                    angleUnit = 'deg';  // Angle above 10 assumes it's in degrees
+                } else if (angle <= 10 && angle > 0) {
+                    angleUnit = 'rad';  // Angle close to 0 assumes it's in radians
+                }
+            }
+        }
+
+        function functionChanged() {
+            const func = document.getElementById("function").value;
+            let infoText = "";
+            
+            if (func === "asin" || func === "acos" || func === "asec" || func === "acsc") {
+                infoText = "Note: Input value should be between -1 and 1 for asin, acos.";
+            } else if (func === "sec" || func === "csc" || func === "cot") {
+                infoText = "Note: Ensure the angle does not cause division by zero (e.g., sec(90°) or cot(0°)).";
+            } else {
+                infoText = "";
+            }
+
+            document.getElementById("info").innerText = infoText;
+        }
+
+        function calculateTrig() {
+    const angle = parseFloat(document.getElementById("angle").value);
+    const func = document.getElementById("function").value;
+
+    if (isNaN(angle)) {
+        document.getElementById("output").innerText = "Please enter a valid number for the angle!";
+        return;
+    }
+
+    let angleInRad = (angleUnit === "deg") ? angle * (Math.PI / 180) : angle;
+    let result;
+    let angleText = (angleUnit === "deg") ? `${angle}°` : `${angle} rad`;
+
+    switch (func) {
+        case "sin":
+            result = Math.sin(angleInRad);
+            break;
+        case "cos":
+            result = Math.cos(angleInRad);
+            break;
+        case "tan":
+            result = Math.tan(angleInRad);
+            break;
+        case "sec":
+            if (angleInRad === Math.PI / 2 || angleInRad === -Math.PI / 2) {
+                result = "Undefined (division by zero)";
+            } else {
+                result = 1 / Math.cos(angleInRad);
+            }
+            break;
+        case "cosec":
+            if (angleInRad === 0) {
+                result = "Undefined (division by zero)";
+            } else {
+                result = 1 / Math.sin(angleInRad);
+            }
+            break;
+        case "cot":
+            if (angleInRad === 0) {
+                result = "Undefined (division by zero)";
+            } else {
+                result = 1 / Math.tan(angleInRad);
+            }
+            break;
+        case "asin":
+            if (angle < -1 || angle > 1) {
+                result = "Value out of range for asin!";
+            } else {
+                result = Math.asin(angleInRad) * (180 / Math.PI); // Convert radians to degrees
+                angleText = `${angleInRad} rad`; // Input angle in radians
+            }
+            break;
+        case "acos":
+            if (angle < -1 || angle > 1) {
+                result = "Value out of range for acos!";
+            } else {
+                result = Math.acos(angleInRad) * (180 / Math.PI); // Convert radians to degrees
+                angleText = `${angleInRad} rad`; // Input angle in radians
+            }
+            break;
+        case "atan":
+            result = Math.atan(angleInRad) * (180 / Math.PI); // Convert radians to degrees
+            angleText = `${angleInRad} rad`; // Input angle in radians
+            break;
+        case "asec":
+            if (angleInRad < 1 && angleInRad > -1) {
+                result = "Value out of range for asec!";
+            } else {
+                result = Math.acos(1 / angleInRad) * (180 / Math.PI); // Convert radians to degrees
+            }
+            break;
+        case "acosec":
+            if (angleInRad < 1 && angleInRad > -1) {
+                result = "Value out of range for acosec!";
+            } else {
+                result = Math.asin(1 / angleInRad) * (180 / Math.PI); // Convert radians to degrees
+            }
+            break;
+        case "acot":
+            result = Math.atan(1 / angleInRad) * (180 / Math.PI); // Convert radians to degrees
+            break;
+        default:
+            result = "Invalid function selected!";
+    }
+
+    // Round the result to 2 decimal places if it's a number
+    if (typeof result === 'number') {
+        result = result.toFixed(3);
+    }
+
+    document.getElementById("output").innerText = `${func.toUpperCase()}(${angleText}) = ${result}`;
+}
+
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
