@@ -15,9 +15,6 @@
       animation: gradientBG 15s ease infinite;
       color: #333333;
       transition: background 0.3s, color 0.3s;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
@@ -29,9 +26,19 @@
       color: #FFFFFF;
     }
 
+    /* Full-Screen Container */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; /* Align content to the top */
+      min-height: 100vh;
+      padding-top: 60px; /* Adjusted to start just below the menu bar */
+    }
+
     /* Sticky Header */
     .header {
-      position: sticky;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -102,16 +109,6 @@
       outline: none;
     }
 
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      overflow-y: auto; /* Allow scrolling if content overflows */
-    }
-
     /* Grid Layout for Tools */
     .grid {
       display: grid;
@@ -143,20 +140,14 @@
       margin-bottom: 10px;
     }
 
-    /* Sticky Footer */
+    /* Footer */
     .footer {
-      position: sticky;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      padding: 10px;
-      background-color: #003366;
-      color: #FFFFFF;
-      box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 40px;
+      font-size: 14px;
+      color: #777777;
     }
     .dark-mode .footer {
-      background-color: #001933;
+      color: #AAAAAA;
     }
 
     /* Dark Mode Toggle */
@@ -187,21 +178,20 @@
   </style>
 </head>
 <body>
-  <!-- Sticky Header -->
-  <div class="header">
-    <div class="menu-icon" onclick="toggleMenu()">☰</div>
-    <h1>All-in-One Tools</h1>
-  </div>
+  <div class="container">
+    <!-- Sticky Header -->
+    <div class="header">
+      <div class="menu-icon" onclick="toggleMenu()">☰</div>
+      <h1></h1>
+    </div>
 
-  <!-- Hamburger Menu -->
-  <div class="menu-content" id="menuContent">
-    <a href="#">Developer Info</a>
-    <a href="#">Contact</a>
-    <a href="#">About</a>
-  </div>
+    <!-- Hamburger Menu -->
+    <div class="menu-content" id="menuContent">
+      <a href="#">Developer Info</a>
+      <a href="#">Contact</a>
+      <a href="#">About</a>
+    </div>
 
-  <!-- Main Content -->
-  <div class="main-content">
     <!-- Search Bar -->
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search tools..." oninput="filterTools()">
@@ -234,12 +224,15 @@
         Trigonometric Functions
       </a>
     </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      Your Premium Toolbox for Everyday Calculations
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
   </div>
-
- 
-
-  <!-- Dark Mode Toggle -->
-  <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
 
   <script>
     // Toggle Menu
