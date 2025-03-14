@@ -6,6 +6,7 @@
   <title>All-in-One Tools</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    /* Global Styles */
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -24,22 +25,31 @@
       background: linear-gradient(-45deg, #003366, #001933, #003366, #001933);
       color: #FFFFFF;
     }
+
+    /* Full-Screen Container */
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 20px;
+      padding-top: 80px; /* Space for the fixed header */
     }
+
+    /* Sticky Header */
     .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 100%;
       padding: 10px 20px;
       background-color: #003366;
       color: #FFFFFF;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .header h1 {
       font-size: 24px;
@@ -49,6 +59,8 @@
       font-size: 24px;
       cursor: pointer;
     }
+
+    /* Search Bar */
     .search-bar {
       margin: 20px 0;
       width: 80%;
@@ -62,10 +74,14 @@
       font-size: 16px;
       outline: none;
     }
+
+    /* Grid Layout for Tools */
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 20px;
+      width: 90%;
+      max-width: 800px;
       margin-top: 20px;
     }
     .button {
@@ -89,6 +105,8 @@
       font-size: 36px;
       margin-bottom: 10px;
     }
+
+    /* Footer */
     .footer {
       margin-top: 40px;
       font-size: 14px;
@@ -97,6 +115,8 @@
     .dark-mode .footer {
       color: #AAAAAA;
     }
+
+    /* Hamburger Menu */
     .menu-content {
       display: none;
       position: absolute;
@@ -121,6 +141,8 @@
     .dark-mode .menu-content a {
       color: #FFFFFF;
     }
+
+    /* Dark Mode Toggle */
     .dark-mode-toggle {
       position: fixed;
       bottom: 20px;
@@ -138,10 +160,13 @@
     .dark-mode-toggle:hover {
       background-color: #001933;
     }
+
+    /* Widgets */
     .widgets {
       display: flex;
       justify-content: space-around;
       width: 100%;
+      max-width: 800px;
       margin-top: 20px;
     }
     .widget {
@@ -155,22 +180,40 @@
       background-color: #003366;
       color: #FFFFFF;
     }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .widgets {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Sticky Header -->
     <div class="header">
       <div class="menu-icon" onclick="toggleMenu()">☰</div>
       <h1>All-in-One Tools</h1>
     </div>
+
+    <!-- Hamburger Menu -->
     <div class="menu-content" id="menuContent">
       <a href="#">Developer Info</a>
       <a href="#">Contact</a>
       <a href="#">About</a>
     </div>
+
+    <!-- Search Bar -->
     <div class="search-bar">
       <input type="text" placeholder="Search tools...">
     </div>
+
+    <!-- Tool Grid -->
     <div class="grid">
       <a href="Calculator.html" class="button">
         <i class="fas fa-calculator"></i>
@@ -197,6 +240,8 @@
         Trigonometric Functions
       </a>
     </div>
+
+    <!-- Widgets -->
     <div class="widgets">
       <div class="widget">
         <i class="fas fa-clock"></i>
@@ -211,9 +256,13 @@
         <div id="quote">Loading...</div>
       </div>
     </div>
+
+    <!-- Footer -->
     <div class="footer">
       Your Premium Toolbox for Everyday Calculations
     </div>
+
+    <!-- Dark Mode Toggle -->
     <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
   </div>
 
@@ -229,7 +278,6 @@
       const menuContent = document.getElementById("menuContent");
       const menuIcon = document.querySelector(".menu-icon");
 
-      // Check if the click is outside the menu and not on the menu icon
       if (!menuContent.contains(event.target) && !menuIcon.contains(event.target)) {
         menuContent.style.display = "none";
       }
@@ -248,7 +296,7 @@
     }
     setInterval(updateClock, 1000);
 
-    // Weather Widget (Example)
+    // Weather Widget (Live Data)
     const weather = document.getElementById("weather");
     fetch("https://api.openweathermap.org/data/2.5/weather?q=London&appid=YOUR_API_KEY&units=metric")
       .then(response => response.json())
