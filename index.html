@@ -60,6 +60,40 @@
       cursor: pointer;
     }
 
+    /* Hamburger Menu */
+    .menu-content {
+      position: fixed;
+      top: 60px;
+      left: 20px;
+      background-color: #FFFFFF;
+      border: 1px solid #DDDDDD;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none; /* Disable clicks when hidden */
+    }
+    .menu-content.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto; /* Enable clicks when visible */
+    }
+    .menu-content a {
+      display: block;
+      color: #333333;
+      text-decoration: none;
+      padding: 8px 0;
+    }
+    .dark-mode .menu-content {
+      background-color: #003366;
+      border-color: #001933;
+    }
+    .dark-mode .menu-content a {
+      color: #FFFFFF;
+    }
+
     /* Search Bar */
     .search-bar {
       margin: 20px 0;
@@ -114,32 +148,6 @@
     }
     .dark-mode .footer {
       color: #AAAAAA;
-    }
-
-    /* Hamburger Menu */
-    .menu-content {
-      display: none;
-      position: absolute;
-      top: 50px;
-      left: 20px;
-      background-color: #FFFFFF;
-      border: 1px solid #DDDDDD;
-      padding: 10px;
-      border-radius: 5px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .dark-mode .menu-content {
-      background-color: #003366;
-      border-color: #001933;
-    }
-    .menu-content a {
-      display: block;
-      color: #333333;
-      text-decoration: none;
-      padding: 8px 0;
-    }
-    .dark-mode .menu-content a {
-      color: #FFFFFF;
     }
 
     /* Dark Mode Toggle */
@@ -270,17 +278,22 @@
     // Toggle Menu
     function toggleMenu() {
       const menuContent = document.getElementById("menuContent");
-      menuContent.style.display = menuContent.style.display === "block" ? "none" : "block";
+      menuContent.classList.toggle("active");
     }
 
-    // Close Menu When Clicking Outside
+    // Close Menu When Clicking Outside or Scrolling
     document.addEventListener("click", function(event) {
       const menuContent = document.getElementById("menuContent");
       const menuIcon = document.querySelector(".menu-icon");
 
       if (!menuContent.contains(event.target) && !menuIcon.contains(event.target)) {
-        menuContent.style.display = "none";
+        menuContent.classList.remove("active");
       }
+    });
+
+    document.addEventListener("scroll", function() {
+      const menuContent = document.getElementById("menuContent");
+      menuContent.classList.remove("active");
     });
 
     // Dark Mode Toggle
