@@ -206,7 +206,7 @@
     <!-- Sticky Header -->
     <div class="header">
       <div class="menu-icon" onclick="toggleMenu()">☰</div>
-      <h1>All-in-One Tools</h1>
+      <h1></h1>
     </div>
 
     <!-- Hamburger Menu -->
@@ -218,32 +218,32 @@
 
     <!-- Search Bar -->
     <div class="search-bar">
-      <input type="text" placeholder="Search tools...">
+      <input type="text" id="searchInput" placeholder="Search tools..." oninput="filterTools()">
     </div>
 
     <!-- Tool Grid -->
-    <div class="grid">
-      <a href="Calculator.html" class="button">
+    <div class="grid" id="toolGrid">
+      <a href="Calculator.html" class="button" data-name="General Calculator">
         <i class="fas fa-calculator"></i>
         General Calculator
       </a>
-      <a href="index1.html" class="button">
+      <a href="index1.html" class="button" data-name="Unit Converter">
         <i class="fas fa-ruler"></i>
         Unit Converter
       </a>
-      <a href="Base converter.html" class="button">
+      <a href="Base converter.html" class="button" data-name="Base Converter">
         <i class="fas fa-superscript"></i>
         Base Converter
       </a>
-      <a href="age calculator.html" class="button">
+      <a href="age calculator.html" class="button" data-name="Age Calculator">
         <i class="fas fa-birthday-cake"></i>
         Age Calculator
       </a>
-      <a href="Currency converer.html" class="button">
+      <a href="Currency converer.html" class="button" data-name="Currency Converter">
         <i class="fas fa-money-bill-wave"></i>
         Currency Converter
       </a>
-      <a href="Trig calculator.html" class="button">
+      <a href="Trig calculator.html" class="button" data-name="Trigonometric Functions">
         <i class="fas fa-chart-line"></i>
         Trigonometric Functions
       </a>
@@ -254,10 +254,6 @@
       <div class="widget">
         <i class="fas fa-clock"></i>
         <div id="clock">Loading...</div>
-      </div>
-      <div class="widget">
-        <i class="fas fa-cloud"></i>
-        <div id="weather">Loading...</div>
       </div>
       <div class="widget">
         <i class="fas fa-quote-left"></i>
@@ -309,17 +305,6 @@
     }
     setInterval(updateClock, 1000);
 
-    // Weather Widget (Live Data)
-    const weather = document.getElementById("weather");
-    fetch("https://api.openweathermap.org/data/2.5/weather?q=London&appid=YOUR_API_KEY&units=metric")
-      .then(response => response.json())
-      .then(data => {
-        weather.textContent = `${data.main.temp}°C, ${data.weather[0].description}`;
-      })
-      .catch(() => {
-        weather.textContent = "Weather unavailable";
-      });
-
     // Quote Widget
     const quote = document.getElementById("quote");
     fetch("https://api.quotable.io/random")
@@ -330,6 +315,21 @@
       .catch(() => {
         quote.textContent = "Stay awesome!";
       });
+
+    // Search Functionality
+    function filterTools() {
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const tools = document.querySelectorAll("#toolGrid .button");
+
+      tools.forEach(tool => {
+        const toolName = tool.getAttribute("data-name").toLowerCase();
+        if (toolName.includes(searchInput)) {
+          tool.style.display = "flex";
+        } else {
+          tool.style.display = "none";
+        }
+      });
+    }
   </script>
 </body>
 </html>
