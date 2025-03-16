@@ -342,9 +342,9 @@ sub {
                     <div id="topDisplay"></div>
                 </div>
                 <input type="text" id="display" readonly value="0">
+                
                 <div id="exponential-container">
                     ×10<sup id="exponential"></sup>
-                </div>
             </div>
             <div class="button-container">
                 <div class="trigonometry">
@@ -763,6 +763,24 @@ document.querySelectorAll('.button').forEach(button => {
         // }, 150)
     })
 })
+
+// ...existing code...
+
+function rootFunc(event, root) {
+    if (calculation.length === 0 || operators.includes(calculation.slice(-1)[0])) {
+        calculation.push(root);
+    } else {
+        calculation.push('*', root);
+    }
+    showOnScreen.push(event.target.dataset.buttonSymbol);
+    updateScreen();
+
+    numBut.forEach(element => {
+        element.removeEventListener('click', removeAns);
+    });
+}
+
+// ...existing code...
    </script> 
 </body>
 
