@@ -1,311 +1,234 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>This is for my friends!</title>
-<!-- BTW PEEPS, I FOUND A COUPLE BUGS AND PROBABLY WILL FIX THEM MID MARCH HAHA BECAUSE IT'S 1ST WEEK OF SCHOOL -->
-<style> 
-body {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator</title>
+<style>
+
+* {
     margin: 0;
-    background-color: white; /* সাদা ব্যাকগ্রাউন্ড */
-    text-align: center;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-p {
-    font-size: 0px;
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f1f1f1;
+    font-family: Arial, sans-serif;
 }
 
-td {
-    width: 19vw;
-    height: 13.8vh;
-    text-align: center;
-    font-size: 25px;
-    font-weight: bold;
-    color: black; /* কালো টেক্সট */
-    border: 1px solid black; /* কালো বর্ডার */
-}
-
-td:hover {
-    background-color: #f0f0f0; /* হোভারে হালকা ধূসর ব্যাকগ্রাউন্ড */
-}
-
-input {
+.calculator {
     width: 100%;
-    height: 100%;
-    border: none;
-    font-size: 25px;
-    font-weight: bold;
-    padding: 0px 5px;
-    background-color: white; /* সাদা ব্যাকগ্রাউন্ড */
-    color: black; /* কালো টেক্সট */
+    max-width: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-#shiftBtn {
-    background-color: black; /* কালো ব্যাকগ্রাউন্ড */
-    color: white; /* সাদা টেক্সট */
+#display {
+    width: 100%;
+    height: 80px;
+    border: none;
+    background-color: #222;
+    color: #fff;
+    font-size: 2.5rem;
+    text-align: right;
+    padding: 10px;
+    box-sizing: border-box;
 }
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+}
+
+button {
+    border: none;
+    background-color: #f9f9f9;
+    padding: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #ddd;
+}
+
+button.equals {
+    grid-column: span 1;
+    background-color: #ff9500;
+    color: #fff;
+}
+
+button.equals:hover {
+    background-color: #e08900;
+}
+
+button.zero {
+    grid-column: span 2;
+}
+
+button:active {
+    background-color: #ccc;
+}
+
 </style>
 </head>
 <body>
-<p id=myPara></p>
-<p id=myAns>0</p>
-<table>
-    <tr>
-    <td colspan=5><input id=result readonly></td>
-    </tr>
-        
-    <tr>
-    <td onclick="shiftFn(1)" id=shiftBtn>Shift</td>
-    <td onclick="trigo('sin')">sin</td>
-    <td onclick="trigo('cos')">cos</td>
-    <td onclick="trigo('tan')">tan</td>
-    <td onclick="input('!')">!</td>
-    </tr>
-    
-    <tr>
-    <td onclick="input('^(')">^</td>
-    <td onclick="sqrt()">sqrt</td>
-    <td onclick="leftParen()">(</td>
-    <td onclick="input(')')">)</td>
-    <td onclick="log(1)">log</td>
-    </tr>
-    
-    <tr>
-    <td onclick="input('7')">7</td>
-    <td onclick="input('8')">8</td>
-    <td onclick="input('9')">9</td>
-    <td onclick="del()">DEL</td>
-    <td onclick="ac()">AC</td>
-    </tr>
-    
-    <tr>
-    <td onclick="input('4')">4</td>
-    <td onclick="input('5')">5</td>
-    <td onclick="input('6')">6</td>
-    <td onclick="multOrDiv('mult')">&#x00D7;</td>
-    <td onclick="multOrDiv('div')">&#x00F7;</td>
-    </tr>
-    
-    <tr>
-    <td onclick="input('1')">1</td>
-    <td onclick="input('2')">2</td>
-    <td onclick="input('3')">3</td>
-    <td onclick="input('+')">+</td>
-    <td onclick="input('-')">-</td>
-    </tr>
-    
-    <tr>
-    <td onclick="input('0')">0</td>
-    <td onclick="input('.')">.</td>
-    <td onclick="piOrE('pi')">&#x03C0;</td>
-    <td onclick="ans()">Ans</td>
-    <td onclick="equal()">=</td>
-    </tr>
-</table>
-<script>
+    <div class="calculator">
+        <!-- Display -->
+        <input type="text" id="display" disabled>
 
-function shiftFn(ken) {
-    var shift = document.getElementById("shiftBtn") ;
-    var arr = document.getElementsByTagName("td") ;
-    if (ken == 1) {
-        shift.setAttribute("onclick", "shiftFn(0)") ;
-        shift.style.backgroundColor = "orange" ;
-        arr[2].innerHTML = "sin<sup>-1</sup>" ;
-        arr[2].setAttribute("onclick", "trigo1('sin')") ;
-        arr[3].innerHTML = "cos<sup>-1</sup>" ;
-        arr[3].setAttribute("onclick", "trigo1('cos')") ;
-        arr[4].innerHTML = "tan<sup>-1</sup>" ;
-        arr[4].setAttribute("onclick", "trigo1('tan')") ;
-        arr[10].innerHTML = "ln" ;
-        arr[10].setAttribute("onclick", "log(0)") ;
-        arr[28].innerHTML = "\u0065" ;
-        arr[28].setAttribute("onclick", "piOrE('e')") ;
+        <!-- Buttons -->
+        <div class="buttons">
+            <!-- Memory Buttons -->
+            <button onclick="memoryClear()">MC</button>
+            <button onclick="memoryRecall()">MR</button>
+            <button onclick="memoryAdd()">M+</button>
+            <button onclick="memorySubtract()">M-</button>
+
+            <!-- Advanced Functions -->
+            <button onclick="squareRoot()">√</button>
+            <button onclick="square()">x²</button>
+            <button onclick="power()">xʸ</button>
+            <button onclick="factorial()">!</button>
+
+            <!-- Clear and Delete -->
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="deleteLast()">DEL</button>
+            <button onclick="appendToDisplay('/')">/</button>
+            <button onclick="appendToDisplay('*')">*</button>
+
+            <!-- Numbers -->
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('-')">-</button>
+
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('+')">+</button>
+
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="calculate()" class="equals">=</button>
+
+            <button onclick="appendToDisplay('0')" class="zero">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="toggleSign()">+/-</button>
+            <button onclick="percentage()">%</button>
+
+            <!-- Parentheses -->
+            <button onclick="appendToDisplay('(')">(</button>
+            <button onclick="appendToDisplay(')')">)</button>
+        </div>
+    </div>
+    <script>
+
+let memory = 0;
+
+// Append input to display
+function appendToDisplay(value) {
+    const display = document.getElementById('display');
+    display.value += value;
+}
+
+// Clear display
+function clearDisplay() {
+    const display = document.getElementById('display');
+    display.value = '';
+}
+
+// Delete last character
+function deleteLast() {
+    const display = document.getElementById('display');
+    display.value = display.value.slice(0, -1);
+}
+
+// Calculate result
+function calculate() {
+    const display = document.getElementById('display');
+    try {
+        display.value = eval(display.value);
+    } catch (error) {
+        display.value = 'Error';
+    }
+}
+
+// Toggle sign (+/-)
+function toggleSign() {
+    const display = document.getElementById('display');
+    if (display.value.charAt(0) === '-') {
+        display.value = display.value.slice(1);
     } else {
-        shift.setAttribute("onclick", "shiftFn(1)") ;
-        shift.style.backgroundColor = "yellow" ;
-        arr[2].innerHTML = "sin" ;
-        arr[2].setAttribute("onclick", "trigo('sin')") ;
-        arr[3].innerHTML = "cos" ;
-        arr[3].setAttribute("onclick", "trigo('cos')") ;
-        arr[4].innerHTML = "tan" ;
-        arr[4].setAttribute("onclick", "trigo('tan')") ;
-        arr[10].innerHTML = "log" ;
-        arr[10].setAttribute("onclick", "log(1)") ;
-        arr[28].innerHTML = "\u03C0" ;
-        arr[28].setAttribute("onclick", "piOrE('pi')") ;
+        display.value = '-' + display.value;
     }
 }
 
-function input(sun) {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    x.value += sun ;
-    y.innerHTML += sun ;
+// Percentage
+function percentage() {
+    const display = document.getElementById('display');
+    display.value = eval(display.value) / 100;
 }
 
-function factorial(shirious) {
-    if (Number.isInteger(shirious)) {
-        if (shirious < 2) return 1 ;
-        return shirious * factorial(shirious - 1) ;
+// Square root
+function squareRoot() {
+    const display = document.getElementById('display');
+    display.value = Math.sqrt(eval(display.value));
+}
+
+// Square
+function square() {
+    const display = document.getElementById('display');
+    display.value = Math.pow(eval(display.value), 2);
+}
+
+// Power (xʸ)
+function power() {
+    const display = document.getElementById('display');
+    appendToDisplay('**'); // Use '**' for exponentiation in JavaScript
+}
+
+// Factorial
+function factorial() {
+    const display = document.getElementById('display');
+    let num = eval(display.value);
+    let result = 1;
+    for (let i = 1; i <= num; i++) {
+        result *= i;
     }
+    display.value = result;
 }
 
-function sqrt() {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    x.value += "sqrt(" ;
-    y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-    " * Math.sqrt(" : "Math.sqrt(" ;
+// Memory functions
+function memoryClear() {
+    memory = 0;
 }
 
-function leftParen() {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    x.value += "(" ;
-    y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-    " * (" : "(" ;
+function memoryRecall() {
+    const display = document.getElementById('display');
+    display.value = memory;
 }
 
-function piOrE(lunar) {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    if (lunar == "pi") {
-        x.value += "\u03C0" ;
-        y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-        " * Math.PI" : "Math.PI" ;
-    } else {
-        x.value += "\u0065" ;
-        y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-        " * Math.E" : "Math.E" ;
-    }
+function memoryAdd() {
+    const display = document.getElementById('display');
+    memory += eval(display.value);
 }
 
-function log(jafca) {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    if (jafca == 1) {
-        x.value += "log(" ;
-        y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-        " * Math.log10(" : "Math.log10(" ;
-    } else {
-        x.value += "ln(" ;
-        y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-        " * Math.log(" : "Math.log(" ;
-    }
+function memorySubtract() {
+    const display = document.getElementById('display');
+    memory -= eval(display.value);
 }
 
-function trigo(hatsyrei) {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    x.value += hatsyrei + "(" ;
-    y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-    " * Math." + hatsyrei + "(Math.PI / 180 * " : "Math." + hatsyrei + "(Math.PI / 180 * " ;
-}
-
-function trigo1(valentin) {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    x.value += valentin + "\u207B\u00B9("
-    y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-    " * 180 / Math.PI * Math.a" + valentin + "(" : "180 / Math.PI * Math.a" + valentin + "(" ;
-}
-
-function multOrDiv(edward) {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    if (edward == "mult") {
-        x.value += "\u00D7" ;
-        y.innerHTML += "*" ;
-    } else {
-        x.value += "\u00F7" ;
-        y.innerHTML += "/"
-    }
-}
-
-function del() {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    var z = document.getElementById("myAns") ;
-    if (x.value.slice(-3) == "Ans") {
-        y.innerHTML = (/[\d)IE]/.test(x.value.slice(-4, -3))) ? 
-        y.innerHTML.slice(0, -(z.innerHTML.length + 3)) : y.innerHTML.slice(0, -(z.innerHTML.length)) ;
-        x.value = x.value.slice(0, -3) ;
-    } else if (x.value == "Error!") {
-        ac() ;
-    } else {
-        switch (y.innerHTML.slice(-2)) {
-            case "* ": // sin cos tan
-            y.innerHTML = (/[\d)IE]/.test(x.value.slice(-5, -4))) ? 
-            y.innerHTML.slice(0, -28) : y.innerHTML.slice(0, -25) ;
-            x.value = x.value.slice(0, -4) ;
-            break ;
-            case "n(":
-            case "s(": // asin acos atan
-            y.innerHTML = (/[\d)IE]/.test(x.value.slice(-7, -6))) ? 
-            y.innerHTML.slice(0, -29) : y.innerHTML.slice(0, -26) ;
-            x.value = x.value.slice(0, -6) ;
-            break ;
-            case "0(": // log
-            y.innerHTML = (/[\d)IE]/.test(x.value.slice(-5, -4))) ? 
-            y.innerHTML.slice(0, -14) : y.innerHTML.slice(0, -11) ;
-            x.value = x.value.slice(0, -4) ;
-            break ;
-            case "g(": // ln
-            y.innerHTML = (/[\d)IE]/.test(x.value.slice(-4, -3))) ? 
-            y.innerHTML.slice(0, -12) : y.innerHTML.slice(0, -9) ;
-            x.value = x.value.slice(0, -3) ;
-            break ;
-            case "t(": // sqrt
-            y.innerHTML = (/[\d)IE]/.test(x.value.slice(-6, -5))) ? 
-            y.innerHTML.slice(0, -13) : y.innerHTML.slice(0, -10) ;
-            x.value = x.value.slice(0, -5) ;
-            break ;
-            case "PI": // pi
-            y.innerHTML = (/[\d)IE]/.test(x.value.slice(-2, -1))) ? 
-            y.innerHTML.slice(0, -10) : y.innerHTML.slice(0, -7) ;
-            x.value = x.value.slice(0, -1) ;
-            break ;
-            case ".E": // e
-            y.innerHTML = (/[\d)IE]/.test(x.value.slice(-2, -1))) ? 
-            y.innerHTML.slice(0, -9) : y.innerHTML.slice(0, -6) ;
-            x.value = x.value.slice(0, -1) ;
-            break ;
-            default:
-            y.innerHTML = y.innerHTML.slice(0, -1) ;
-            x.value = x.value.slice(0, -1) ;
-        } ;
-    }
-}
-
-function ac() {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    x.value = y.innerHTML = "" ;
-}
-
-function ans() {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    var z = document.getElementById("myAns") ;
-    x.value += "Ans" ;
-    y.innerHTML += (/[\d)IE]/.test(y.innerHTML.slice(-1))) ? 
-    " * " + z.innerHTML : z.innerHTML ;
-}
-
-function equal() {
-    var x = document.getElementById("result") ;
-    var y = document.getElementById("myPara") ;
-    var z = document.getElementById("myAns") ;
-    for (var i = 0; i < x.value.split("(").length - x.value.split(")").length; i++) {
-        y.innerHTML += ")" ;
-    }
-    if (y.innerHTML != "") {
-        x.value = y.innerHTML = z.innerHTML = eval(y.innerHTML
-        .replace(/(\d+\.?\d*)\!/g, "factorial($1)")
-        .replace(/(\(?[^(]*\)?)\^(\(?.*\)?)/, "Math.pow($1, $2)")
-        ) ;
-    }
-    if (!isFinite(x.value)) x.value = "Error!" ;
-}
-
-</script>
+    </script>
 </body>
 </html>
