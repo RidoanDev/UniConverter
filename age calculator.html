@@ -4,59 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Age Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .calculator {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        input {
+            padding: 8px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <div class="converter-container">
+    <div class="calculator">
         <h1>Age Calculator</h1>
-        <label for="birthDate">Enter Your Birth Date:</label>
-        <input type="date" id="birthDate">
-        
-        <label for="targetDate">Calculate Age As of (Target Date):</label>
-        <input type="date" id="targetDate">
-
+        <label for="birthdate">Enter your date of birth:</label>
+        <input type="date" id="birthdate" name="birthdate">
         <button onclick="calculateAge()">Calculate Age</button>
-        <div class="output" id="output">Your age will appear here.</div>
-        <button class="back-button" onclick="goBack()">Go to Home</button>
+        <div id="result"></div>
     </div>
 
     <script>
         function calculateAge() {
-            const birthDate = new Date(document.getElementById("birthDate").value);
-            const targetDate = new Date(document.getElementById("targetDate").value);
-           
-
-            if (isNaN(birthDate.getTime()) || isNaN(targetDate.getTime())) {
-                document.getElementById("output").innerText = "Please enter valid dates.";
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const today = new Date();
+            
+            if (isNaN(birthdate.getTime())) {
+                document.getElementById('result').innerHTML = "Please enter a valid date";
                 return;
             }
-
-            if (birthDate > targetDate) {
-                document.getElementById("output").innerText = "Target date must be after the birth date.";
+            
+            if (birthdate > today) {
+                document.getElementById('result').innerHTML = "Birthdate cannot be in the future";
                 return;
             }
-
-            let ageYears = targetDate.getFullYear() - birthDate.getFullYear();
-            let ageMonths = targetDate.getMonth() - birthDate.getMonth();
-            let ageDays = targetDate.getDate() - birthDate.getDate();
-
-            if (ageDays < 0) {
-                ageMonths -= 1;
-                ageDays += new Date(targetDate.getFullYear(), targetDate.getMonth(), 0).getDate();
+            
+            let age = today.getFullYear() - birthdate.getFullYear();
+            const monthDiff = today.getMonth() - birthdate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+                age--;
             }
-            if (ageMonths < 0) {
-                ageYears -= 1;
-                ageMonths += 12;
+            
+            // Calculate months and days
+            let months, days;
+            if (today.getMonth() >= birthdate.getMonth()) {
+                months = today.getMonth() - birthdate.getMonth();
+            } else {
+                months = 12 + today.getMonth() - birthdate.getMonth();
             }
-
-            document.getElementById("output").innerText = `As of ${targetDate.toDateString()}, you are ${ageYears} years, ${ageMonths} months, and ${ageDays} days old.`;
-           
-       
-        }
-
-        function goBack() {
-            window.location.href = "index.html";
+            
+            if (today.getDate() >= birthdate.getDate()) {
+                days = today.getDate() - birthdate.getDate();
+            } else {
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days = lastMonth.getDate() - birthdate.getDate() + today.getDate();
+                months--;
+                if (months < 0) {
+                    months = 11;
+                    age--;
+                }
+            }
+            
+            document.getElementById('result').innerHTML = 
+                `Your age is: ${age} years, ${months} months, and ${days} days`;
         }
     </script>
 </body>
