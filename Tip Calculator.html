@@ -21,6 +21,7 @@
         h1 {
             text-align: center;
             color: #333;
+            margin-top: 0;
         }
         .input-group {
             margin-bottom: 15px;
@@ -32,20 +33,23 @@
         }
         input, select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px;
         }
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #45a049;
@@ -57,6 +61,20 @@
             border-radius: 4px;
             display: none;
         }
+        .result h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .result p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -66,13 +84,14 @@
         <div class="input-group">
             <label for="bill-amount">Bill Amount ($):</label>
             <input type="number" id="bill-amount" placeholder="Enter bill amount" min="0" step="0.01">
+            <div id="bill-error" class="error">Please enter a valid bill amount</div>
         </div>
         
         <div class="input-group">
             <label for="tip-percentage">Tip Percentage:</label>
             <select id="tip-percentage">
                 <option value="15">15% - Standard</option>
-                <option value="18">18% - Good</option>
+                <option value="18" selected>18% - Good</option>
                 <option value="20">20% - Excellent</option>
                 <option value="custom">Custom</option>
             </select>
@@ -81,11 +100,13 @@
         <div class="input-group" id="custom-tip-group" style="display: none;">
             <label for="custom-tip">Custom Tip Percentage:</label>
             <input type="number" id="custom-tip" placeholder="Enter custom percentage" min="0" step="0.1">
+            <div id="tip-error" class="error">Please enter a valid tip percentage</div>
         </div>
         
         <div class="input-group">
             <label for="people">Number of People:</label>
             <input type="number" id="people" placeholder="1" min="1" value="1">
+            <div id="people-error" class="error">Please enter at least 1 person</div>
         </div>
         
         <button onclick="calculateTip()">Calculate Tip</button>
@@ -107,10 +128,16 @@
                 customTipGroup.style.display = 'block';
             } else {
                 customTipGroup.style.display = 'none';
+                document.getElementById('tip-error').style.display = 'none';
             }
         });
 
         function calculateTip() {
+            // Reset error messages
+            document.getElementById('bill-error').style.display = 'none';
+            document.getElementById('tip-error').style.display = 'none';
+            document.getElementById('people-error').style.display = 'none';
+            
             // Get input values
             const billAmount = parseFloat(document.getElementById('bill-amount').value);
             const tipPercentageSelect = document.getElementById('tip-percentage');
@@ -125,18 +152,26 @@
             const people = parseInt(document.getElementById('people').value);
             
             // Validate inputs
-            if (isNaN(billAmount) {
-                alert('Please enter a valid bill amount');
-                return;
+            let isValid = true;
+            
+            if (isNaN(billAmount) || billAmount <= 0) {
+                document.getElementById('bill-error').style.display = 'block';
+                isValid = false;
             }
             
-            if (isNaN(tipPercentage) || tipPercentage < 0) {
-                alert('Please enter a valid tip percentage');
-                return;
+            if ((tipPercentageSelect.value === 'custom' && (isNaN(tipPercentage) || tipPercentage < 0)) || 
+                (tipPercentageSelect.value !== 'custom' && isNaN(tipPercentage))) {
+                document.getElementById('tip-error').style.display = 'block';
+                isValid = false;
             }
             
             if (isNaN(people) || people < 1) {
-                alert('Please enter a valid number of people');
+                document.getElementById('people-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                document.getElementById('result').style.display = 'none';
                 return;
             }
             
@@ -154,6 +189,13 @@
             
             document.getElementById('result').style.display = 'block';
         }
+        
+        // Allow pressing Enter key to calculate
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateTip();
+            }
+        });
     </script>
 </body>
 </html>
