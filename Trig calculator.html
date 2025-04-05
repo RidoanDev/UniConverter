@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trigonometric Functions Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,10 +18,24 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #4CAF50;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .back-arrow:hover {
+            color: #45a049;
         }
         h1 {
             text-align: center;
             color: #333;
+            margin-top: 10px;
         }
         .input-group {
             margin-bottom: 15px;
@@ -46,6 +61,7 @@
             cursor: pointer;
             width: 100%;
             font-size: 16px;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
@@ -74,6 +90,10 @@
 </head>
 <body>
     <div class="calculator">
+        <a href="index.html" class="back-arrow">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        
         <h1>Trigonometric Functions Calculator</h1>
         
         <div class="input-group">
