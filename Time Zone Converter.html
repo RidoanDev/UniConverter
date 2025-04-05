@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Zone Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .converter {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="converter">
+        <h1>Time Zone Converter</h1>
+        
+        <div class="input-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="time">Time:</label>
+            <input type="time" id="time" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="from-timezone">From Time Zone:</label>
+            <select id="from-timezone">
+                <option value="UTC">UTC (Coordinated Universal Time)</option>
+                <option value="EST">EST (Eastern Standard Time)</option>
+                <option value="PST">PST (Pacific Standard Time)</option>
+                <option value="CST">CST (Central Standard Time)</option>
+                <option value="MST">MST (Mountain Standard Time)</option>
+                <option value="GMT">GMT (Greenwich Mean Time)</option>
+                <option value="CET">CET (Central European Time)</option>
+                <option value="EET">EET (Eastern European Time)</option>
+                <option value="AEST">AEST (Australian Eastern Standard Time)</option>
+                <option value="JST">JST (Japan Standard Time)</option>
+                <option value="IST">IST (Indian Standard Time)</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label for="to-timezone">To Time Zone:</label>
+            <select id="to-timezone">
+                <option value="UTC">UTC (Coordinated Universal Time)</option>
+                <option value="EST" selected>EST (Eastern Standard Time)</option>
+                <option value="PST">PST (Pacific Standard Time)</option>
+                <option value="CST">CST (Central Standard Time)</option>
+                <option value="MST">MST (Mountain Standard Time)</option>
+                <option value="GMT">GMT (Greenwich Mean Time)</option>
+                <option value="CET">CET (Central European Time)</option>
+                <option value="EET">EET (Eastern European Time)</option>
+                <option value="AEST">AEST (Australian Eastern Standard Time)</option>
+                <option value="JST">JST (Japan Standard Time)</option>
+                <option value="IST">IST (Indian Standard Time)</option>
+            </select>
+        </div>
+        
+        <button onclick="convertTime()">Convert Time</button>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function convertTime() {
+            // Get input values
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const fromTz = document.getElementById('from-timezone').value;
+            const toTz = document.getElementById('to-timezone').value;
+            
+            // Validate inputs
+            if (!date || !time) {
+                alert('Please enter both date and time');
+                return;
+            }
+            
+            // Create a Date object in the original timezone
+            const dateTimeStr = `${date}T${time}`;
+            const originalDate = new Date(dateTimeStr);
+            
+            if (isNaN(originalDate.getTime())) {
+                alert('Invalid date or time');
+                return;
+            }
+            
+            // Convert to target timezone (simplified approach)
+            // Note: In a real application, you would use a proper timezone library
+            // like moment-timezone or date-fns-tz for accurate conversions
+            
+            let convertedDate = new Date(originalDate);
+            const offsetFrom = getTimezoneOffset(fromTz);
+            const offsetTo = getTimezoneOffset(toTz);
+            const offsetDiff = offsetTo - offsetFrom;
+            
+            convertedDate.setHours(convertedDate.getHours() + offsetDiff);
+            
+            // Format the result
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'UTC'
+            };
+            
+            const resultStr = `${originalDate.toLocaleString('en-US', options)} ${fromTz} is 
+                            ${convertedDate.toLocaleString('en-US', options)} ${toTz}`;
+            
+            // Display the result
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = resultStr;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Simplified timezone offset function
+        // Note: This is a simplified approach - real applications should use a proper timezone library
+        function getTimezoneOffset(tz) {
+            const offsets = {
+                'UTC': 0,
+                'GMT': 0,
+                'EST': -5,
+                'PST': -8,
+                'CST': -6,
+                'MST': -7,
+                'CET': 1,
+                'EET': 2,
+                'AEST': 10,
+                'JST': 9,
+                'IST': 5.5
+            };
+            return offsets[tz] || 0;
+        }
+    </script>
+</body>
+</html>
