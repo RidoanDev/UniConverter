@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Difference Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .date-input {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="date"] {
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Date Difference Calculator</h1>
+        
+        <div class="date-input">
+            <label for="date1">Start Date:</label>
+            <input type="date" id="date1" name="date1">
+        </div>
+        
+        <div class="date-input">
+            <label for="date2">End Date:</label>
+            <input type="date" id="date2" name="date2">
+        </div>
+        
+        <button onclick="calculateDifference()">Calculate Difference</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateDifference() {
+            // Get the dates from the input fields
+            const date1Str = document.getElementById('date1').value;
+            const date2Str = document.getElementById('date2').value;
+            
+            // Check if both dates are selected
+            if (!date1Str || !date2Str) {
+                alert('Please select both dates');
+                return;
+            }
+            
+            // Convert strings to Date objects
+            const date1 = new Date(date1Str);
+            const date2 = new Date(date2Str);
+            
+            // Calculate the difference in milliseconds
+            const diffTime = Math.abs(date2 - date1);
+            
+            // Convert to days
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            
+            // Calculate years, months, and remaining days
+            let years = date2.getFullYear() - date1.getFullYear();
+            let months = date2.getMonth() - date1.getMonth();
+            let days = date2.getDate() - date1.getDate();
+            
+            if (days < 0) {
+                months--;
+                // Get the last day of the previous month
+                const lastDay = new Date(date2.getFullYear(), date2.getMonth(), 0).getDate();
+                days += lastDay;
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            // Display the result
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            
+            resultDiv.innerHTML = `
+                <h3>Result:</h3>
+                <p><strong>Total difference:</strong> ${diffDays} day(s)</p>
+                <p><strong>Detailed difference:</strong> ${years} year(s), ${months} month(s), and ${days} day(s)</p>
+                <p><strong>Start Date:</strong> ${date1.toDateString()}</p>
+                <p><strong>End Date:</strong> ${date2.toDateString()}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
