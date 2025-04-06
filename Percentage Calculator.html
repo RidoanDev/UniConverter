@@ -17,11 +17,22 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
         }
         h1 {
             color: #333;
             text-align: center;
             margin-bottom: 25px;
+            padding-top: 10px;
         }
         .input-group {
             margin-bottom: 15px;
@@ -99,6 +110,7 @@
 </head>
 <body>
     <div class="calculator">
+        <a href="index.html" class="back-arrow">←</a>
         <h1>Percentage Calculator</h1>
         
         <div class="tabs">
