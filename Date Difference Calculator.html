@@ -16,10 +16,12 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
         }
         h1 {
             color: #333;
             text-align: center;
+            margin-top: 10px;
         }
         .date-input {
             margin: 15px 0;
@@ -55,10 +57,22 @@
             border-radius: 4px;
             display: none;
         }
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+        }
+        .back-arrow:hover {
+            color: #000;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <a href="index.html" class="back-arrow">←</a>
         <h1>Date Difference Calculator</h1>
         
         <div class="date-input">
