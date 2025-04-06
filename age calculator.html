@@ -12,14 +12,24 @@
             padding: 20px;
             text-align: center;
         }
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            text-decoration: none;
+            color: #333;
+        }
         .calculator {
             background-color: #f5f5f5;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 40px;
         }
         h1 {
             color: #333;
+            margin-top: 0;
         }
         input {
             padding: 8px;
@@ -47,6 +57,8 @@
     </style>
 </head>
 <body>
+    <a href="index.html" class="back-arrow">← Back</a>
+    
     <div class="calculator">
         <h1>Age Calculator</h1>
         <label for="birthdate">Enter your date of birth:</label>
